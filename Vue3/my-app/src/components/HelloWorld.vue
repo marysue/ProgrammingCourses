@@ -1,56 +1,56 @@
 <script setup>
-import { reactive, ref } from 'vue';
-// const myArray = reactive([1, 2, 3]);
+import { ref } from 'vue';
+import addToDo from './addTodo.vue'
+
+let id = 0;
+const status = ref('waiting...');
 const messageRef = ref('Hello World!');
-const messageReact = reactive({ message: 'From message react' })
-const counter = reactive({ count: 0 });
-const myArray = reactive([1, 2, 3]);
-console.log(`myArray:  `, myArray);
-console.log(`myArray.value: `, myArray.value);
-console.log(`myArray[1].value: `, myArray[1].value);
-console.log(`myArray[1]:  `, myArray[1]);
-myArray[1] = 456;
-counter.count = 899;
-console.log(`counter.count: `, counter.count);
-// console.log(`counter.count.value: `, counter.count.value);
-// console.log(`counter.value: `, counter.value);
+const todosRef = ref([
+])
+console.log(`todosRef: `, todosRef.value)
+const count = ref(0);
+const myArray = ref([1, 2, 3]);
 
-console.log(`messageRef: `, messageRef);
-console.log(`messageRef.value: `, messageRef.value);
-console.log(`messageReact: `, messageReact);
-console.log(`messageReact.message: `, messageReact.message);
+// const myHTML = '<span style="color: red">Red</span>'
+myArray.value[1] = 456;
+count.value = 899;
 messageRef.value = "Changed message";
-messageReact.message = "reactive message changed";
-myArray.push(4);
-console.log(`pushed "4" into myArray [1,2,3].  Contents is now: `, myArray);
-// console.log(`messageReact.message.value: `, messageReact.message.value);
+messageRef.value = "reactive message changed";
+myArray.value.push(4);
 
-
-// const myString = ref('Foo Bar');
+function addToDoItem(item) {
+    console.log(`addToDoItem is the emitted function with item:  `, item);
+    status.value = 'addToDoItem called'
+    console.log(`adding item:  `, item);
+    todosRef.value.push({ id: id++, text: item })
+    console.log(`new todosRef:  `, todosRef.value);
+    status.value = 'Added ' + item + ' ...'
+}
 
 </script>
+
 <template>
-    <div>counter: {{ counter.count }}</div>
-    <div>myArray: {{ myArray }}</div>
-    <div>myArray[1]: {{ myArray[1] }}</div>
-    <div>messageRef: {{ messageRef }}</div>
-    <div>messageReact.message: {{ messageReact.message }}</div>
+    <div>
+        <h2>Todos:</h2>
+        <ul>
+            <li v-for="(todo, id) in todosRef" :key="id" style="display: list-item">
+                {{ todo.text }}
+            </li>
+        </ul>
+
+        <addToDo :todos="todosRef" @input-complete="addToDoItem" />
+    </div>
 </template>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-    margin: 40px 0 0;
+<style>
+div {
+    margin-left: 250px;
+    text-align: left;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-}
 
 li {
-    display: inline-block;
-    margin: 0 10px;
+    list-style-type: none;
 }
 
 a {
